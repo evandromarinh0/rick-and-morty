@@ -1,7 +1,8 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable jsx-a11y/anchor-has-content */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
-
 import logoImg from '../../assets/logo.png';
-import api from '../../services/api';
 
 import {
   Container,
@@ -22,50 +23,76 @@ interface CharacterProps {
   species: string;
   location: {
     name: string;
-  }
+  };
   image: string;
   origin: {
     name: string;
-  }
+  };
 }
 
+const CHARACTERS_QUERY = `
+{
+  characters {
+    results {
+      id
+      name
+      image
+      status
+      species
+      origin {
+        name
+      }
+      location {
+        name
+      }
+    }
+  }
+}
+`;
+
 const Main: React.FC = () => {
-  const [character, setCharacter] = useState<CharacterProps[]>([]);
+  const [characters, setCharacters] = useState([]);
 
   useEffect(() => {
-    api.get(`/character/?page=${Math.floor(Math.random() * 33)}`).then(response => {
-      setCharacter(response.data.results);
+    fetch('https://rickandmortyapi.com/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: CHARACTERS_QUERY }),
     })
+      .then(response => response.json())
+      .then(data => setCharacters(data.data.characters.results));
   }, []);
 
-  return(
+  return (
     <Container>
       <Header>
-        <img src={logoImg} alt="Logo"/>
+        <img src={logoImg} alt="Logo" />
         <span>Rick and Morty Characters</span>
       </Header>
 
       <Body>
-        {character.map(char => (
-          <CharactersContainer key={char.id}>
+        {characters.map((character: CharacterProps) => (
+          <CharactersContainer key={character.id}>
             <CharacterImage>
-              <img src={char.image} alt=""/>
+              <img src={character.image} alt={character.name} />
             </CharacterImage>
 
-            <CharacterInfo >
+            <CharacterInfo>
               <Status>
-                <a href="#">{char.name}</a>
-                <p>{char.status} - {char.species} </p>
+                <a href="#">{character.name}</a>
+                <p>
+                  {character.status} - {character.species}
+                </p>
               </Status>
 
               <Location>
                 <span>Last known location:</span>
-                  <a href="#">{char.location.name}</a>
+                <a href="#">{character.location.name}</a>
               </Location>
 
               <FirstAppearence>
                 <span>Origin:</span>
-                  <a href="#">{char.origin.name}</a>
+                <a href="#">{character.origin.name}</a>
               </FirstAppearence>
             </CharacterInfo>
           </CharactersContainer>

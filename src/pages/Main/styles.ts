@@ -46,7 +46,7 @@ export const Body = styled.div`
 
 export const CharactersContainer = styled.div`
   margin: 16px auto 32px;
-  background: #312E38;
+  background: #312e38;
   width: 650px;
   height: 236px;
   display: flex;
@@ -54,9 +54,9 @@ export const CharactersContainer = styled.div`
   overflow: hidden;
 
   @media (max-width: 860px) {
-    background: #312E38;
+    background: #312e38;
     width: 450px;
-    height: 450px;;
+    height: 450px;
     flex-direction: column;
   }
 `;
@@ -88,7 +88,6 @@ export const CharacterInfo = styled.div`
 `;
 
 export const Status = styled.div`
-
   a {
     color: #fff;
     font-size: 24px;
